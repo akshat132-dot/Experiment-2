@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banking UI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .bank-ui {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+    }
+
+    .balance {
+      font-size: 2rem;
+      color: #2e7d32;
+      margin-bottom: 1.5rem;
+      font-weight: bold;
+    }
+
+    .action-button {
+      display: block;
+      width: 100%;
+      padding: 0.9rem;
+      margin: 0.5rem 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .action-button:active {
+      opacity: 0.85;
+    }
+
+    .deposit {
+      background-color: #4caf50;
+    }
+
+    .withdraw {
+      background-color: #f44336;
+    }
+
+    @media (max-width: 480px) {
+      .bank-ui {
+        padding: 1.5rem;
+      }
+
+      .balance {
+        font-size: 1.75rem;
+      }
+
+      .action-button {
+        font-size: 0.95rem;
+        padding: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bank-ui">
+    <div class="balance" id="balanceDisplay">$0</div>
+    <button class="action-button deposit" onclick="handleTransaction('deposit')">Deposit</button>
+    <button class="action-button withdraw" onclick="handleTransaction('withdraw')">Withdraw</button>
+  </div>
+
+  <script>
+    // Initialize balance from localStorage or default to 0
+    let balance = parseFloat(localStorage.getItem("bankBalance")) || 0;
+
+    // Show balance when page loads
+    window.onload = updateBalanceDisplay;
+
+    function handleTransaction(type) {
+      const input = prompt(`Enter amount to ${type}:`);
+      const amount = parseFloat(input);
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid positive number.");
+        return;
+      }
+
+      if (type === 'withdraw' && amount > balance) {
+        alert("Insufficient balance.");
+        return;
+      }
+
+      if (type === 'deposit') {
+        balance += amount;
+      } else {
+        balance -= amount;
+      }
+
+      // Save updated balance to localStorage
+      localStorage.setItem("bankBalance", balance.toFixed(2));
+
+      updateBalanceDisplay();
+    }
+
+    function updateBalanceDisplay() {
+      document.getElementById("balanceDisplay").textContent = `$${balance.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
